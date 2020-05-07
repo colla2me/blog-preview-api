@@ -88,7 +88,19 @@ class AuthControllerTest {
     }
 
     @Test
-    void testRegisterNewUser() throws Exception {
+    void registerIfUsernameOrPasswordIsInvalid() throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put("username", "");
+        params.put("password", "");
+        String json = new ObjectMapper().writeValueAsString(params);
+
+        mvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                .andExpect(status().isOk())
+                .andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString().contains("invalid")));
+    }
+
+    @Test
+    void registerNewUser() throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("username", "user");
         params.put("password", "password");
@@ -101,7 +113,15 @@ class AuthControllerTest {
     }
 
     @Test
-    void testLogout() throws Exception {
+    void logoutIfUserNotLogin() throws Exception {
+        mvc.perform(get("/auth/logout"))
+                .andDo(result -> result.getResponse().setHeader("Content-type", "application/json;charset=UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString().contains("尚未登录")));
+    }
+
+    @Test
+    void logoutIfUserLoggedIn() throws Exception {
         when(userService.getUserByUsername(null))
                 .thenReturn(new com.github.entity.User(1, "user", passwordEncoder.encode("password")));
 
