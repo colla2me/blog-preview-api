@@ -8,6 +8,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,7 +37,8 @@ public class AuthController {
     @GetMapping("/auth")
     @ResponseBody
     public AuthResult auth() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication != null ? authentication.getName() : null;
         User user = userService.getUserByUsername(username);
         return AuthResult.withLoggedInUser(user);
     }
@@ -62,6 +64,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/register")
+    @ResponseBody
     public Result register(@RequestBody Map<String, String> params) {
         System.out.println("register params: " + params);
         String username = params.get("username");
@@ -87,7 +90,8 @@ public class AuthController {
     @GetMapping("/auth/logout")
     @ResponseBody
     public Result logout() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication != null ? authentication.getName() : null;
         User user = userService.getUserByUsername(username);
         if (user == null) {
             return Result.failure("用户尚未登录");
