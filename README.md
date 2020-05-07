@@ -1,1 +1,1 @@
-# spring-boot-blogs
+# SpringBoot demo
