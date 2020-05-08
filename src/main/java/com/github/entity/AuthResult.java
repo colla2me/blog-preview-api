@@ -1,21 +1,33 @@
 package com.github.entity;
 
-public class AuthResult extends Result {
+public class AuthResult extends Result<User> {
 
     private boolean isLogin;
+    private String avatar;
 
-    public static AuthResult withLoggedInUser(User user) {
-        boolean isLogin = user != null;
-        String msg = isLogin ? "用户已登录" : "用户未登录";
-        return new AuthResult("ok", msg, user, isLogin);
-    }
-
-    private AuthResult(String status, String msg, User user, boolean isLogin) {
+    protected AuthResult(ResultStatus status, String msg, User user) {
         super(status, msg, user);
-        this.isLogin = isLogin;
+        this.isLogin = user != null;
+        this.avatar = isLogin ? user.getAvatar() : "";
     }
 
     public boolean isLogin() {
         return isLogin;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public static AuthResult failure(String msg) {
+        return new AuthResult(ResultStatus.FAIL, msg, null);
+    }
+
+    public static AuthResult success(String msg) {
+        return success(null, msg);
+    }
+
+    public static AuthResult success(User user, String msg) {
+        return new AuthResult(ResultStatus.OK, msg, user);
     }
 }

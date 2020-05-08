@@ -1,31 +1,32 @@
 package com.github.entity;
 
-public class Result {
-    private String status;
-    private String msg;
-    private Object data;
+public abstract class Result<T> {
+    public enum ResultStatus {
+        OK("ok"),
+        FAIL("fail");
 
-    public static Result failure(String msg) {
-        return new Result("fail", msg, null);
+        private String status;
+
+        ResultStatus(String status) {
+            this.status = status;
+        }
     }
 
-    public static Result success(Object data, String msg) {
-        return new Result("ok", msg, data);
-    }
+    ResultStatus status;
+    String msg;
+    T data;
 
-    public Result(String status, String msg, Object data) {
+    protected Result(ResultStatus status, String msg, T data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
     }
 
     public String getStatus() {
-        return status;
+        return status.status;
     }
 
-    public String getMsg() {
-        return msg;
-    }
+    public String getMsg() { return msg; }
 
     public Object getData() {
         return data;

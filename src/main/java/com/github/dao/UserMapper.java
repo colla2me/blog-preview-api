@@ -1,4 +1,4 @@
-package com.github.mapper;
+package com.github.dao;
 
 import com.github.entity.User;
 import org.apache.ibatis.annotations.Mapper;

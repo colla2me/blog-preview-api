@@ -1,7 +1,7 @@
 package com.github.service;
 
 import com.github.entity.User;
-import com.github.mapper.UserMapper;
+import com.github.dao.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

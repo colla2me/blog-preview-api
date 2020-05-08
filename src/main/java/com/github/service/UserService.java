@@ -1,7 +1,7 @@
 package com.github.service;
 
 import com.github.entity.User;
-import com.github.mapper.UserMapper;
+import com.github.dao.UserMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,14 +13,13 @@ import java.util.Collections;
 
 @Service
 public class UserService implements UserDetailsService {
-    private UserMapper userMapper;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserMapper userMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Inject
     public UserService(UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userMapper = userMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        save("abc", "123");
     }
 
     public void save(String username, String password) {
