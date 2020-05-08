@@ -38,6 +38,6 @@ public class Pagination {
     }
 
     public int offset() {
-        return (page - 1) * pageSize;
+        return (getPage() - 1) * pageSize;
     }
 }
