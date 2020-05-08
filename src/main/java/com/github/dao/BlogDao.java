@@ -1,7 +1,9 @@
 package com.github.dao;
 
 import com.github.entity.Blog;
+import com.github.entity.BlogResult;
 import com.github.entity.Pagination;
+import com.github.utils.MapUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +21,33 @@ public class BlogDao {
         this.sqlSession = sqlSession;
     }
 
-    private Map<String, Object> asMap(Object... args) {
-        Map<String, Object> result = new HashMap<>();
-        for (int i = 0; i < args.length; i += 2) {
-            result.put(args[i].toString(), args[i + 1]);
-        }
-        return result;
-    }
-
-    public List<Blog> loadBlogsByUserId(Integer userId, Pagination pagination) {
-        Map<String, Object> parameters = asMap(
-                "user_id", userId,
-                "offset", pagination.offset(),
-                "limit", pagination.limit());
+    public List<Blog> selectBlogsByUserId(Integer userId, int offset, int limit) {
+        Map<String, Object> parameters = MapUtils.asMap(
+                "userId", userId,
+                "offset", offset,
+                "limit", limit);
         return sqlSession.selectList("selectBlogs", parameters);
     }
 
     public int count(Integer userId) {
-        return sqlSession.selectOne("countBlog", asMap("userId", userId));
+        return sqlSession.selectOne("countBlog", MapUtils.asMap("userId", userId));
+    }
+
+    public Blog selectBlogById(int blogId) {
+        return sqlSession.selectOne("selectBlogById", MapUtils.asMap("id", blogId));
+    }
+
+    public Blog insertBlog(Blog newBlog) {
+        sqlSession.insert("insertBlog", newBlog);
+        return selectBlogById(newBlog.getId());
+    }
+
+    public Blog updateBlog(Blog myBlog) {
+        sqlSession.update("updateBlog", myBlog);
+        return selectBlogById(myBlog.getId());
+    }
+
+    public void deleteBlogById(int blogId) {
+        sqlSession.delete("deleteBlog", blogId);
     }
 }

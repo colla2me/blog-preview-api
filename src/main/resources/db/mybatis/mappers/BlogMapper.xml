@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.BlogMapper">
-    <select id="selectBlogs" resultMap="BlogList">
+    <select id="selectBlogs" resultMap="blog">
         SELECT
         BLOG.id as blog_id,
         BLOG.title as blog_title,
@@ -20,12 +20,29 @@
         LEFT OUTER JOIN USER
         ON BLOG.user_id = USER.id
         <if test="user_id != null">
-            WHERE BLOG.user_id = #{user_id}
+            WHERE BLOG.user_id = #{userId}
         </if>
         order by BLOG.updated_at desc
         limit ${offset}, #{limit}
     </select>
-    <resultMap id="BlogList" type="Blog">
+    <select id="selectBlogById" resultMap="blog">
+        SELECT BLOG.id          as blog_id,
+               BLOG.title       as blog_title,
+               BLOG.description as blog_description,
+               BLOG.content     as blog_content,
+               BLOG.updated_at  as blog_updated_at,
+               BLOG.created_at  as blog_created_at,
+               USER.id          as user_id,
+               USER.username    as user_username,
+               USER.avatar      as user_avatar,
+               USER.updated_at  as user_updated_at,
+               USER.created_at  as user_created_at
+        FROM BLOG
+                 LEFT OUTER JOIN USER
+                                 ON BLOG.user_id = USER.id
+        WHERE BLOG.id = #{id}
+    </select>
+    <resultMap id="blog" type="Blog">
         <id property="id" column="blog_id"/>
         <result property="title" column="blog_title"/>
         <result property="description" column="blog_description"/>
@@ -46,4 +63,22 @@
             WHERE user_id = #{userId}
         </if>
     </select>
+
+    <insert id="insertBlog" parameterType="Blog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO BLOG (user_id, title, description, content, created_at, updated_at)
+        VALUES (#{userId}, #{title}, #{description}, #{content}, now(), now())
+    </insert>
+
+    <update id="updateBlog" parameterType="Blog">
+        UPDATE BLOG
+        SET title       = #{title},
+            content     = #{content},
+            description = #{description},
+            updated_at  = now()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBlog" parameterType="int">
+        DELETE FROM BLOG WHERE id=#{blogId}
+    </delete>
 </mapper>
