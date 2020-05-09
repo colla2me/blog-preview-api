@@ -19,7 +19,7 @@
         FROM BLOG
         LEFT OUTER JOIN USER
         ON BLOG.user_id = USER.id
-        <if test="user_id != null">
+        <if test="userId != null">
             WHERE BLOG.user_id = #{userId}
         </if>
         order by BLOG.updated_at desc
@@ -59,7 +59,7 @@
     </resultMap>
     <select id="countBlog" resultType="int">
         SELECT count(*) FROM BLOG
-        <if test="user_id != null">
+        <if test="userId != null">
             WHERE user_id = #{userId}
         </if>
     </select>
