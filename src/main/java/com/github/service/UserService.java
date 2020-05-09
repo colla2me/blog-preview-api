@@ -13,14 +13,17 @@ import java.util.Collections;
 
 @Service
 public class UserService implements UserDetailsService {
-    private final UserMapper userMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Inject
+    private UserMapper userMapper;
 
     @Inject
-    public UserService(UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userMapper = userMapper;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+//    @Inject
+//    public UserService(UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+//        this.userMapper = userMapper;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//    }
 
     public void save(String username, String password) {
         userMapper.save(username, bCryptPasswordEncoder.encode(password));
