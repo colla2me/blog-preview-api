@@ -22,7 +22,7 @@ public class Pagination {
     }
 
     public int getPage() {
-        return Math.min(page, totalPage);
+        return Math.min(page, Math.max(totalPage, 1));
     }
 
     public int getTotalPage() {
@@ -39,5 +39,15 @@ public class Pagination {
 
     public int offset() {
         return (getPage() - 1) * pageSize;
+    }
+
+    @Override
+    public String toString() {
+        return "Pagination{" +
+                "page=" + page +
+                ", pageSize=" + pageSize +
+                ", total=" + total +
+                ", totalPage=" + totalPage +
+                '}';
     }
 }

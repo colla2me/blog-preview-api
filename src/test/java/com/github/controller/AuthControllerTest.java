@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 class AuthControllerTest {
-    MockMvc mvc;
+    private MockMvc mvc;
 
     static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -48,7 +48,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void testAuthWhenUserNotLogin() throws Exception {
+    public void testAuthWhenUserNotLogin() throws Exception {
         mvc.perform(get("/auth"))
                 .andExpect(status().isOk())
                 .andDo(result -> result.getResponse().setHeader("Content-type", "application/json;charset=UTF-8"))
@@ -56,7 +56,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void testAuthWhenUserLoggedIn() throws Exception {
+    public void testAuthWhenUserLoggedIn() throws Exception {
         mvc.perform(get("/auth"))
                 .andExpect(status().isOk())
                 .andDo(result -> result.getResponse().setHeader("Content-type", "application/json;charset=UTF-8"))
@@ -88,7 +88,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerIfUsernameOrPasswordIsInvalid() throws Exception {
+    public void testRegisterParametersIsInvalid() throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("username", "");
         params.put("password", "");
@@ -100,7 +100,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerNewUser() throws Exception {
+    public void testRegisterNewUser() throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("username", "user");
         params.put("password", "password");
@@ -113,7 +113,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void logoutIfUserNotLogin() throws Exception {
+    public void testLogoutIfUserNotLogin() throws Exception {
         mvc.perform(get("/auth/logout"))
                 .andDo(result -> result.getResponse().setHeader("Content-type", "application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
@@ -121,7 +121,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void logoutIfUserLoggedIn() throws Exception {
+    public void testLogoutIfUserLoggedIn() throws Exception {
         when(userService.getUserByUsername(null))
                 .thenReturn(new com.github.entity.User(1, "user", passwordEncoder.encode("password")));
 
