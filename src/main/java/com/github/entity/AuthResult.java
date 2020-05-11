@@ -11,7 +11,7 @@ public class AuthResult extends Result<User> {
         this.avatar = isLogin ? user.getAvatar() : "";
     }
 
-    public boolean isLogin() {
+    public boolean getIsLogin() {
         return isLogin;
     }
 
